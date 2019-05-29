@@ -1,6 +1,12 @@
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Travis](https://img.shields.io/travis/rennokki/laravel-sns-events.svg?style=flat-square)]()
-[![Total Downloads](https://img.shields.io/packagist/dt/rennokki/laravel-sns-events.svg?style=flat-square)](https://packagist.org/packages/rennokki/laravel-sns-events)
+[![Build Status](https://travis-ci.org/rennokki/laravel-sns-events.svg?branch=master)](https://travis-ci.org/rennokki/laravel-sns-events)
+[![codecov](https://codecov.io/gh/rennokki/laravel-sns-events/branch/master/graph/badge.svg)](https://codecov.io/gh/rennokki/laravel-sns-events/branch/master)
+[![StyleCI](https://github.styleci.io/repos/189254977/shield?branch=master)](https://github.styleci.io/repos/189254977)
+[![Latest Stable Version](https://poser.pugx.org/rennokki/laravel-sns-events/v/stable)](https://packagist.org/packages/rennokki/laravel-sns-events)
+[![Total Downloads](https://poser.pugx.org/rennokki/laravel-sns-events/downloads)](https://packagist.org/packages/rennokki/laravel-sns-events)
+[![Monthly Downloads](https://poser.pugx.org/rennokki/laravel-sns-events/d/monthly)](https://packagist.org/packages/rennokki/laravel-sns-events)
+[![License](https://poser.pugx.org/rennokki/laravel-sns-events/license)](https://packagist.org/packages/rennokki/laravel-sns-events)
+
+[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
 
 # Laravel SNS Events
 Laravel SNS Events allow you to listen to SNS webhooks via Laravel Events. It implements a controller that is made to properly listen to SNS HTTP(s) webhooks and trigger events on which you can listen to in Laravel.
