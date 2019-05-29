@@ -1,0 +1,42 @@
+{
+    "name": "rennokki/laravel-sns-events",
+    "description": "A description for laravel-sns-events.",
+    "type": "package",
+    "license": "MIT",
+    "keywords": [
+        "laravel"
+    ],
+    "authors": [
+        {
+            "name": "rennokki",
+            "email": "rennokki@gmil.com"
+        }
+    ],
+    "require": {
+        "aws/aws-php-sns-message-validator": "^1.5.0",
+        "illuminate/support": "~5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rennokki\\LaravelSnsEvents\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rennokki\\LaravelSnsEvents\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rennokki\\LaravelSnsEvents\\LaravelSnsEventsServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.8"
+    }
+}
