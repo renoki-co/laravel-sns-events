@@ -2,7 +2,6 @@
 
 namespace Rennokki\LaravelSnsEvents\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Rennokki\LaravelSnsEvents\Events\SnsEvent;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
