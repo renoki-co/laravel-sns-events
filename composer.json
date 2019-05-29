@@ -13,7 +13,6 @@
         }
     ],
     "require": {
-        "aws/aws-php-sns-message-validator": "^1.5.0",
         "illuminate/support": "~5.4"
     },
     "autoload": {
