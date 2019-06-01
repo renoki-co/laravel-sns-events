@@ -14,7 +14,9 @@ Laravel SNS Events allow you to listen to SNS webhooks via Laravel Events. It im
 If you are not familiar with Laravel Events & Listeners, make sure you check the [documentation section on laravel.com](https://laravel.com/docs/5.8/events) because this package will need you to understand this concept.
 
 ## Install
-`composer require rennokki/laravel-sns-events`
+```bash
+$ composer require rennokki/laravel-sns-events
+```
 
 ## Usage
 The package comes with two event classes:
