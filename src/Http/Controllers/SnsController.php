@@ -30,6 +30,7 @@ class SnsController extends Controller
             // Confirm the subscription by sending a GET request to the SubscribeURL
             file_get_contents($message['SubscribeURL']);
             event(new SnsSubscriptionConfirmation);
+
             return response('OK', 200);
         }
 
