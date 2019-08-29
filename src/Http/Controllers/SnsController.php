@@ -2,11 +2,11 @@
 
 namespace Rennokki\LaravelSnsEvents\Http\Controllers;
 
-use Aws\Sns\Exception\InvalidSnsMessageException;
 use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
 use Illuminate\Routing\Controller;
 use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Aws\Sns\Exception\InvalidSnsMessageException;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 
 class SnsController extends Controller
@@ -22,7 +22,7 @@ class SnsController extends Controller
             $validator->validate($message);
         } catch (InvalidSnsMessageException $e) {
             // Return 404 to pretend we are not here for SNS if invalid request
-            return response('SNS Message Validation Error: ' . $e->getMessage(), 404);
+            return response('SNS Message Validation Error: '.$e->getMessage(), 404);
         }
 
         // Check the type of the message and handle the subscription.
