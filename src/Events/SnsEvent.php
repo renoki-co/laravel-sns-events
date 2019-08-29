@@ -2,6 +2,7 @@
 
 namespace Rennokki\LaravelSnsEvents\Events;
 
+use Aws\Sns\Message;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -15,10 +16,10 @@ class SnsEvent
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Message $message
      */
-    public function __construct($message)
+    public function __construct(Message $message)
     {
-        $this->message = $message;
+        $this->message = $message->toArray();
     }
 }
