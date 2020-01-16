@@ -8,6 +8,11 @@ use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 
 class SnsController extends Controller
 {
+    /**
+     * Handle the incoming SNS event.
+     *
+     * @return mixed
+     */
     public function handle()
     {
         $message = json_decode(file_get_contents('php://input'), true);
