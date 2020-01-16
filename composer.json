@@ -8,12 +8,13 @@
     ],
     "authors": [
         {
-            "name": "rennokki",
-            "email": "rennokki@gmil.com"
+            "name": "Alex Renoki",
+            "homepage": "https://twitter.com/rennokki",
+            "role": "Developer"
         }
     ],
     "require": {
-        "illuminate/support": "~5.4|~6.0"
+        "illuminate/support": "~5.4|^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +37,6 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "^3.8"
+        "orchestra/testbench": "^4.5"
     }
 }
