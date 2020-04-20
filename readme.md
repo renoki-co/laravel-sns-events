@@ -6,8 +6,6 @@
 [![Monthly Downloads](https://poser.pugx.org/rennokki/laravel-sns-events/d/monthly)](https://packagist.org/packages/rennokki/laravel-sns-events)
 [![License](https://poser.pugx.org/rennokki/laravel-sns-events/license)](https://packagist.org/packages/rennokki/laravel-sns-events)
 
-[![PayPal](https://img.shields.io/badge/PayPal-donate-blue.svg)](https://paypal.me/rennokki)
-
 # Laravel SNS Events
 Laravel SNS Events allow you to listen to SNS webhooks via Laravel Events. It implements a controller that is made to properly listen to SNS HTTP(s) webhooks and trigger events on which you can listen to in Laravel.
 
@@ -99,14 +97,19 @@ Run the tests with:
 vendor/bin/phpunit
 ```
 
-## Changelog
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Contributing
+
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
-If you discover any security-related issues, please email DummyAuthorEmail instead of using the issue tracker.
+
+If you discover any security related issues, please email alex@renoki.org instead of using the issue tracker.
+
+## Credits
+
+- [Alex Renoki](https://github.com/rennokki)
+- [All Contributors](../../contributors)
 
 ## License
-The MIT License (MIT). Please see [License File](/LICENSE.md) for more information.
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
