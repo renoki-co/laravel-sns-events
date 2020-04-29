@@ -45,7 +45,7 @@ class SnsEvent
     public function getMessage()
     {
         if (! isset($this->payload['Message'])) {
-            return null;
+            return;
         }
 
         $message = $this->payload['Message'];
