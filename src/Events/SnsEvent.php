@@ -18,13 +18,22 @@ class SnsEvent
     public $message;
 
     /**
+     * The headers sent through the SNS request.
+     *
+     * @var array
+     */
+    public $headers = [];
+
+    /**
      * Create a new event instance.
      *
      * @param  array  $message
+     * @param  array  $headers
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $headers = [])
     {
         $this->message = $message;
+        $this->headers = $headers;
     }
 }
