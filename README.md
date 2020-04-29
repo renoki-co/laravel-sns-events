@@ -7,19 +7,20 @@
 [![License](https://poser.pugx.org/rennokki/laravel-sns-events/license)](https://packagist.org/packages/rennokki/laravel-sns-events)
 
 # Laravel SNS Events
+
 Laravel SNS Events allow you to listen to SNS webhooks via Laravel Events. It leverages a controller that is made to properly listen to SNS HTTP(s) webhooks and trigger events on which you can listen to in Laravel.
 
 If you are not familiar with Laravel Events & Listeners, make sure you check the [documentation section on Laravel Documentation](https://laravel.com/docs/master/events) because this package will need you to understand this concept.
 
 ## Install
+
 ```bash
 $ composer require rennokki/laravel-sns-events
 ```
 
-## Usage
 There are two classes that get triggered, depending on the request sent by AWS:
 
-* `Rennokki\LaravelSnsEvents\Events\SnsEvent` - triggered on each SNS message
+* `Rennokki\LaravelSnsEvents\Events\SnsEvent` - triggered on each SNS notification
 * `Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation` - triggered when the subscription is confirmed
 
 A controller that will handle the response for you should be registered in your routes:
@@ -46,6 +47,8 @@ Make sure to enable RAW JSON format for your SNS Subscription.
 
 If you have registered the route and created a SNS Topic, you should register the URL and click the confirmation button from the AWS Dashboard. In a short while, if you implemented the route well, you'll be seeing that your endpoint is registered.
 
+## Usage
+
 To process the events, you should add the events in your `app/Providers/EventServiceProvider.php`:
 
 ```php
@@ -65,7 +68,7 @@ protected $listen = [
 ]
 ```
 
-You will be able to access the SNS message from your listeners like this:
+You will be able to access the SNS notification from your listeners like this:
 
 ```php
 class MyListener
@@ -74,7 +77,7 @@ class MyListener
 
     public function handle($event)
     {
-        // $event->message is an array containing the payload sent
+        // $event->payload is an array containing the payload sent
         // $event->headers is an array containing the headers sent
 
         $content = json_decode($event->message['Message'], true);
@@ -83,6 +86,26 @@ class MyListener
     }
 }
 ```
+
+## JSON-Decoded Message
+
+Some payloads come with a `Message` field that is usually JSON-encoded. To retrieve it as array, without having to decode it yourself, you can call `getMessage()` from the event:
+
+```php
+class MyListener
+{
+    ...
+
+    public function handle($event)
+    {
+        $content = $event->getMessage();
+
+        // ...
+    }
+}
+```
+
+**In case the message is not JSON-decodable, the `getMessage` method will return the orginal sent message if it's a string or `null` if it does not exist.**
 
 ## Testing
 

@@ -65,7 +65,7 @@ class EventTest extends TestCase
                 isset($event->headers['x-test-header'])
             );
 
-            $message = json_decode($event->payload['Message'], true);
+            $message = $event->getMessage();
 
             $this->assertEquals(1, $message['test']);
             $this->assertEquals(true, $message['sns']);

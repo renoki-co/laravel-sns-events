@@ -36,4 +36,22 @@ class SnsEvent
         $this->payload = $payload;
         $this->headers = $headers;
     }
+
+    /**
+     * Get the 'Message' from the notification payload.
+     *
+     * @return mixed
+     */
+    public function getMessage()
+    {
+        if (! isset($this->payload['Message'])) {
+            return null;
+        }
+
+        $message = $this->payload['Message'];
+
+        $decodedMessage = @json_decode($message, true);
+
+        return $decodedMessage ?: $message;
+    }
 }
