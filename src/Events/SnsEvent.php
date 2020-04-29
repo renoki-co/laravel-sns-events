@@ -11,11 +11,11 @@ class SnsEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * The message to be delivered in the listeners.
+     * The payload to be delivered in the listeners.
      *
      * @var array
      */
-    public $message;
+    public $payload;
 
     /**
      * The headers sent through the SNS request.
@@ -27,13 +27,31 @@ class SnsEvent
     /**
      * Create a new event instance.
      *
-     * @param  array  $message
+     * @param  array  $payload
      * @param  array  $headers
      * @return void
      */
-    public function __construct($message, $headers = [])
+    public function __construct($payload, $headers = [])
     {
-        $this->message = $message;
+        $this->payload = $payload;
         $this->headers = $headers;
+    }
+
+    /**
+     * Get the 'Message' from the notification payload.
+     *
+     * @return mixed
+     */
+    public function getMessage()
+    {
+        if (! isset($this->payload['Message'])) {
+            return;
+        }
+
+        $message = $this->payload['Message'];
+
+        $decodedMessage = @json_decode($message, true);
+
+        return $decodedMessage ?: $message;
     }
 }

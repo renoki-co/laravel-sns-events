@@ -17,20 +17,20 @@ class SnsController extends Controller
      */
     public function handle(Request $request)
     {
-        $message = json_decode($this->getContent($request), true);
+        $payload = json_decode($this->getContent($request), true);
 
-        if (isset($message['Type'])) {
-            if ($message['Type'] === 'SubscriptionConfirmation') {
-                file_get_contents($message['SubscribeURL']);
+        if (isset($payload['Type'])) {
+            if ($payload['Type'] === 'SubscriptionConfirmation') {
+                file_get_contents($payload['SubscribeURL']);
 
                 event(new SnsSubscriptionConfirmation(
                     $request->headers->all()
                 ));
             }
 
-            if ($message['Type'] === 'Notification') {
+            if ($payload['Type'] === 'Notification') {
                 event(new SnsEvent(
-                    $message, $request->headers->all()
+                    $payload, $request->headers->all()
                 ));
             }
         }

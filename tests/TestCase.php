@@ -57,17 +57,17 @@ class TestCase extends Orchestra
     /**
      * Get an example notification payload for testing.
      *
-     * @param  string  $message
+     * @param  string  $payload
      * @return array
      */
-    protected function getNotificationPayload($message = ''): array
+    protected function getNotificationPayload($payload = ''): array
     {
         return [
             'Type' => 'Notification',
             'MessageId' => '22b80b92-fdea-4c2c-8f9d-bdfb0c7bf324',
             'TopicArn' => 'arn:aws:sns:us-west-2:123456789012:MyTopic',
             'Subject' => 'My First Message',
-            'Message' => "{$message}",
+            'Message' => "{$payload}",
             'Timestamp' => '2012-05-02T00:54:06.655Z',
             'SignatureVersion' => '1',
             'Signature' => 'EXAMPLEw6JRN...',

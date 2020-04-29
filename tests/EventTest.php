@@ -46,7 +46,7 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $message = json_encode([
+        $payload = json_encode([
             'test' => 1,
             'sns' => true,
         ]);
@@ -55,7 +55,7 @@ class EventTest extends TestCase
             ->withHeaders([
                 'x-test-header' => 1,
             ])
-            ->json('POST', route('sns'), $this->getNotificationPayload($message))
+            ->json('POST', route('sns'), $this->getNotificationPayload($payload))
             ->assertSee('OK');
 
         Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
@@ -65,7 +65,7 @@ class EventTest extends TestCase
                 isset($event->headers['x-test-header'])
             );
 
-            $message = json_decode($event->message['Message'], true);
+            $message = $event->getMessage();
 
             $this->assertEquals(1, $message['test']);
             $this->assertEquals(true, $message['sns']);
