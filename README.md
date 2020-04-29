@@ -29,7 +29,7 @@ A controller that will handle the response for you should be registered in your 
 ...
 
 // you can choose any route
-Route::any('/aws/sns', 'Rennokki\LaravelSnsEvents\Http\Controllers\SnsController@handle');
+Route::any('/aws/sns', '\Rennokki\LaravelSnsEvents\Http\Controllers\SnsController@handle');
 ```
 
 SNS sends data as raw json, so you will need to whitelist your route in your `VerifyCsrfToken.php`:
