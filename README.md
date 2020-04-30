@@ -1,3 +1,6 @@
+Laravel SNS Events
+==================
+
 ![CI](https://github.com/renoki-co/laravel-sns-events/workflows/CI/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/renoki-co/laravel-sns-events/branch/master/graph/badge.svg)](https://codecov.io/gh/renoki-co/laravel-sns-events/branch/master)
 [![StyleCI](https://github.styleci.io/repos/189254977/shield?branch=master)](https://github.styleci.io/repos/189254977)
@@ -6,13 +9,11 @@
 [![Monthly Downloads](https://poser.pugx.org/rennokki/laravel-sns-events/d/monthly)](https://packagist.org/packages/rennokki/laravel-sns-events)
 [![License](https://poser.pugx.org/rennokki/laravel-sns-events/license)](https://packagist.org/packages/rennokki/laravel-sns-events)
 
-# Laravel SNS Events
-
 Laravel SNS Events allow you to listen to SNS webhooks via Laravel Events. It leverages a controller that is made to properly listen to SNS HTTP(s) webhooks and trigger events on which you can listen to in Laravel.
 
 If you are not familiar with Laravel Events & Listeners, make sure you check the [documentation section on Laravel Documentation](https://laravel.com/docs/master/events) because this package will need you to understand this concept.
 
-## Install
+## 🚀 Installation
 
 ```bash
 $ composer require rennokki/laravel-sns-events
@@ -47,7 +48,7 @@ Make sure to enable RAW JSON format for your SNS Subscription.
 
 If you have registered the route and created a SNS Topic, you should register the URL and click the confirmation button from the AWS Dashboard. In a short while, if you implemented the route well, you'll be seeing that your endpoint is registered.
 
-## Usage
+## 🙌 Usage
 
 To process the events, you should add the events in your `app/Providers/EventServiceProvider.php`:
 
@@ -87,7 +88,7 @@ class MyListener
 }
 ```
 
-## JSON-Decoded Message
+### JSON-Decoded Message
 
 Some payloads come with a `Message` field that is usually JSON-encoded. To retrieve it as array, without having to decode it yourself, you can call `getMessage()` from the event:
 
@@ -107,7 +108,7 @@ class MyListener
 
 **In case the message is not JSON-decodable, the `getMessage` method will return the orginal sent message if it's a string or `null` if it does not exist.**
 
-## Testing
+## 🐛 Testing
 
 Run the tests with:
 
@@ -115,19 +116,19 @@ Run the tests with:
 vendor/bin/phpunit
 ```
 
-## Contributing
+## 🤝 Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Security
+## 🔒  Security
 
 If you discover any security related issues, please email alex@renoki.org instead of using the issue tracker.
 
-## Credits
+## 🎉 Credits
 
 - [Alex Renoki](https://github.com/rennokki)
 - [All Contributors](../../contributors)
 
-## License
+## 📄 License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
