@@ -78,17 +78,51 @@ class MyListener
 
     public function handle($event)
     {
-        // $event->payload is an array containing the payload sent
-        // $event->headers is an array containing the headers sent
+        // $event->payload is the data passed to the event.
 
-        $content = json_decode($event->message['Message'], true);
+        $content = json_decode($event->payload['message']['Message'], true);
 
         // ...
     }
 }
 ```
 
-**In case the message is not JSON-decodable, the `getMessage` method will return the orginal sent message if it's a string or `null` if it does not exist.**
+## Custom Payload
+
+Altough the event sends an unique array with filled data, you may customize the way the final payload looks like.
+
+By default, the payload looks like this:
+
+```php
+use Illuminate\Http\Request;
+
+protected function getEventPayload(array $snsMessage, Request $request): array
+{
+    // $snsMessage is the SNS message from the request body (as array)
+    // You may also access the request.
+
+    return [
+        'message' => $snsMessage,
+        'headers' => $request->headers->all(),
+    ];
+}
+```
+
+While extending the controller, you can replace the `getEventPayload` method with your own:
+
+```php
+use Illuminate\Http\Request;
+
+protected function getEventPayload(array $snsMessage, Request $request): array
+{
+    return [
+        'message' => $snsMessage,
+        'user' => $request->user(),
+    ];
+}
+```
+
+**Remember that after extending the controller, to point the SNS route defined earlier to the new controller.**
 
 ## 🐛 Testing
 
