@@ -152,6 +152,8 @@ protected function getNotificationEventClass(): string
 }
 ```
 
+**Make sure you also point the custom event classes in the `EventServiceProvider` class as described in the [Usage section](#-usage).**
+
 To avoid any issues, remember to extend the respective, original event classes before the change:
 
 ```php
