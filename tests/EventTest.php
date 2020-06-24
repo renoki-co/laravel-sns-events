@@ -75,4 +75,42 @@ class EventTest extends TestCase
             return true;
         });
     }
+
+    public function test_custom_controller()
+    {
+        Event::fake();
+
+        $payload = json_encode([
+            'test' => 1,
+            'sns' => true,
+        ]);
+
+        $this
+            ->withHeaders([
+                'x-test-header' => 1,
+            ])
+            ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getNotificationPayload($payload))
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
+
+        Event::assertDispatched(SnsEvent::class, function ($event) {
+            $this->assertEquals(
+                'some-string', $event->payload['test']
+            );
+
+            $this->assertFalse(
+                isset($event->payload['headers'])
+            );
+
+            $message = json_decode(
+                $event->payload['message']['Message'], true
+            );
+
+            $this->assertEquals(1, $message['test']);
+            $this->assertEquals(true, $message['sns']);
+
+            return true;
+        });
+    }
 }
