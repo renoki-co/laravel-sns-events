@@ -124,6 +124,58 @@ protected function getEventPayload(array $snsMessage, Request $request): array
 
 **Remember that after extending the controller, to point the SNS route defined earlier to the new controller.**
 
+## Custom Event Classes
+
+Like the payload, you can also change the event classes to trigger on confirmation or notification.
+
+Simply, replace the following two methods on the extended controller:
+
+```php
+/**
+ * Get the event class to trigger during subscription confirmation.
+ *
+ * @return string
+ */
+protected function getSubscriptionConfirmationEventClass(): string
+{
+    return CustomSubscriptionConfirmation::class;
+}
+
+/**
+ * Get the event class to trigger during SNS event.
+ *
+ * @return string
+ */
+protected function getNotificationEventClass(): string
+{
+    return CustomSnsEvent::class;
+}
+```
+
+To avoid any issues, remember to extend the respective, original event classes before the change:
+
+```php
+// CustomSnsEvent.php
+
+use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+
+class CustomSnsEvent extends SnsEvent
+{
+    //
+}
+```
+
+```php
+// CustomSubscriptionConfirmation.php
+
+use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
+
+class CustomSubscriptionConfirmation extends SnsSubscriptionConfirmation
+{
+    //
+}
+```
+
 ## 🐛 Testing
 
 Run the tests with:
