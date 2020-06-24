@@ -25,11 +25,15 @@ class SnsController extends Controller
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
                 file_get_contents($snsMessage['SubscribeURL']);
 
-                event(new SnsSubscriptionConfirmation($eventPayload));
+                $class = $this->getSubscriptionConfirmationEventClass();
+
+                event(new $class($eventPayload));
             }
 
             if ($snsMessage['Type'] === 'Notification') {
-                event(new SnsEvent($eventPayload));
+                $class = $this->getNotificationEventClass();
+
+                event(new $class($eventPayload));
             }
         }
 
@@ -71,5 +75,25 @@ class SnsController extends Controller
             'message' => $snsMessage,
             'headers' => $request->headers->all(),
         ];
+    }
+
+    /**
+     * Get the event class to trigger during subscription confirmation.
+     *
+     * @return string
+     */
+    protected function getSubscriptionConfirmationEventClass(): string
+    {
+        return SnsSubscriptionConfirmation::class;
+    }
+
+    /**
+     * Get the event class to trigger during SNS event.
+     *
+     * @return string
+     */
+    protected function getNotificationEventClass(): string
+    {
+        return SnsEvent::class;
     }
 }

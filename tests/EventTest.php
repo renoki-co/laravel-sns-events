@@ -5,6 +5,8 @@ namespace Rennokki\LaravelSnsEvents\Tests;
 use Illuminate\Support\Facades\Event;
 use Rennokki\LaravelSnsEvents\Events\SnsEvent;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
+use Rennokki\LaravelSnsEvents\Tests\Events\CustomSnsEvent;
+use Rennokki\LaravelSnsEvents\Tests\Events\CustomSubscriptionConfirmation;
 
 class EventTest extends TestCase
 {
@@ -76,7 +78,33 @@ class EventTest extends TestCase
         });
     }
 
-    public function test_custom_controller()
+    public function test_custom_controller_confirmation()
+    {
+        Event::fake();
+
+        $this
+            ->withHeaders([
+                'x-test-header' => 1,
+            ])
+            ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getSubscriptionConfirmationPayload())
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(CustomSnsEvent::class);
+
+        Event::assertDispatched(CustomSubscriptionConfirmation::class, function ($event) {
+            $this->assertEquals(
+                'some-string', $event->payload['test']
+            );
+
+            $this->assertFalse(
+                isset($event->payload['headers'])
+            );
+
+            return true;
+        });
+    }
+
+    public function test_custom_controller_notification()
     {
         Event::fake();
 
@@ -92,9 +120,9 @@ class EventTest extends TestCase
             ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getNotificationPayload($payload))
             ->assertSee('OK');
 
-        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
+        Event::assertNotDispatched(CustomSubscriptionConfirmation::class);
 
-        Event::assertDispatched(SnsEvent::class, function ($event) {
+        Event::assertDispatched(CustomSnsEvent::class, function ($event) {
             $this->assertEquals(
                 'some-string', $event->payload['test']
             );

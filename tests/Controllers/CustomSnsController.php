@@ -4,6 +4,8 @@ namespace Rennokki\LaravelSnsEvents\Tests\Controllers;
 
 use Illuminate\Http\Request;
 use Rennokki\LaravelSnsEvents\Http\Controllers\SnsController;
+use Rennokki\LaravelSnsEvents\Tests\Events\CustomSnsEvent;
+use Rennokki\LaravelSnsEvents\Tests\Events\CustomSubscriptionConfirmation;
 
 class CustomSnsController extends SnsController
 {
@@ -20,5 +22,25 @@ class CustomSnsController extends SnsController
             'message' => $snsMessage,
             'test' => $request->query('test'),
         ];
+    }
+
+    /**
+     * Get the event class to trigger during subscription confirmation.
+     *
+     * @return string
+     */
+    protected function getSubscriptionConfirmationEventClass(): string
+    {
+        return CustomSubscriptionConfirmation::class;
+    }
+
+    /**
+     * Get the event class to trigger during SNS event.
+     *
+     * @return string
+     */
+    protected function getNotificationEventClass(): string
+    {
+        return CustomSnsEvent::class;
     }
 }
