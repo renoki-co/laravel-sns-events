@@ -35,7 +35,7 @@ class EventTest extends TestCase
 
         Event::assertDispatched(SnsSubscriptionConfirmation::class, function ($event) {
             $this->assertTrue(
-                isset($event->headers['x-test-header'])
+                isset($event->payload['headers']['x-test-header'])
             );
 
             return true;
@@ -62,10 +62,12 @@ class EventTest extends TestCase
 
         Event::assertDispatched(SnsEvent::class, function ($event) {
             $this->assertTrue(
-                isset($event->headers['x-test-header'])
+                isset($event->payload['headers']['x-test-header'])
             );
 
-            $message = $event->getMessage();
+            $message = json_decode(
+                $event->payload['message']['Message'], true
+            );
 
             $this->assertEquals(1, $message['test']);
             $this->assertEquals(true, $message['sns']);

@@ -88,24 +88,6 @@ class MyListener
 }
 ```
 
-### JSON-Decoded Message
-
-Some payloads come with a `Message` field that is usually JSON-encoded. To retrieve it as array, without having to decode it yourself, you can call `getMessage()` from the event:
-
-```php
-class MyListener
-{
-    ...
-
-    public function handle($event)
-    {
-        $content = $event->getMessage();
-
-        // ...
-    }
-}
-```
-
 **In case the message is not JSON-decodable, the `getMessage` method will return the orginal sent message if it's a string or `null` if it does not exist.**
 
 ## 🐛 Testing

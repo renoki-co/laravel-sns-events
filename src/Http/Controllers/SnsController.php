@@ -17,21 +17,19 @@ class SnsController extends Controller
      */
     public function handle(Request $request)
     {
-        $payload = json_decode($this->getContent($request), true);
+        $snsMessage = $this->getSnsMessage($request);
 
-        if (isset($payload['Type'])) {
-            if ($payload['Type'] === 'SubscriptionConfirmation') {
-                file_get_contents($payload['SubscribeURL']);
+        if (isset($snsMessage['Type'])) {
+            $payload = $this->getEventPayload($snsMessage, $request);
 
-                event(new SnsSubscriptionConfirmation(
-                    $request->headers->all()
-                ));
+            if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
+                file_get_contents($snsMessage['SubscribeURL']);
+
+                event(new SnsSubscriptionConfirmation($payload));
             }
 
-            if ($payload['Type'] === 'Notification') {
-                event(new SnsEvent(
-                    $payload, $request->headers->all()
-                ));
+            if ($snsMessage['Type'] === 'Notification') {
+                event(new SnsEvent($payload));
             }
         }
 
@@ -44,8 +42,34 @@ class SnsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return null|string
      */
-    protected function getContent(Request $request)
+    protected function getRequestContent(Request $request)
     {
         return $request->getContent() ?: file_get_contents('php://input');
+    }
+
+    /**
+     * Get the JSON-decoded content.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getSnsMessage(Request $request): array
+    {
+        return json_decode($this->getRequestContent($request), true);
+    }
+
+    /**
+     * Get the event payload to stream to the event.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getEventPayload(array $snsMessage, Request $request): array
+    {
+        return [
+            'message' => $snsMessage,
+            'headers' => $request->headers->all(),
+        ];
     }
 }
