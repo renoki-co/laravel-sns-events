@@ -35,7 +35,7 @@ class EventTest extends TestCase
 
         Event::assertDispatched(SnsSubscriptionConfirmation::class, function ($event) {
             $this->assertTrue(
-                isset($event->headers['x-test-header'])
+                isset($event->payload['headers']['x-test-header'])
             );
 
             return true;
@@ -62,10 +62,50 @@ class EventTest extends TestCase
 
         Event::assertDispatched(SnsEvent::class, function ($event) {
             $this->assertTrue(
-                isset($event->headers['x-test-header'])
+                isset($event->payload['headers']['x-test-header'])
             );
 
-            $message = $event->getMessage();
+            $message = json_decode(
+                $event->payload['message']['Message'], true
+            );
+
+            $this->assertEquals(1, $message['test']);
+            $this->assertEquals(true, $message['sns']);
+
+            return true;
+        });
+    }
+
+    public function test_custom_controller()
+    {
+        Event::fake();
+
+        $payload = json_encode([
+            'test' => 1,
+            'sns' => true,
+        ]);
+
+        $this
+            ->withHeaders([
+                'x-test-header' => 1,
+            ])
+            ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getNotificationPayload($payload))
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
+
+        Event::assertDispatched(SnsEvent::class, function ($event) {
+            $this->assertEquals(
+                'some-string', $event->payload['test']
+            );
+
+            $this->assertFalse(
+                isset($event->payload['headers'])
+            );
+
+            $message = json_decode(
+                $event->payload['message']['Message'], true
+            );
 
             $this->assertEquals(1, $message['test']);
             $this->assertEquals(true, $message['sns']);
