@@ -20,16 +20,16 @@ class SnsController extends Controller
         $snsMessage = $this->getSnsMessage($request);
 
         if (isset($snsMessage['Type'])) {
-            $payload = $this->getEventPayload($snsMessage, $request);
+            $eventPayload = $this->getEventPayload($snsMessage, $request);
 
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
                 file_get_contents($snsMessage['SubscribeURL']);
 
-                event(new SnsSubscriptionConfirmation($payload));
+                event(new SnsSubscriptionConfirmation($eventPayload));
             }
 
             if ($snsMessage['Type'] === 'Notification') {
-                event(new SnsEvent($payload));
+                event(new SnsEvent($eventPayload));
             }
         }
 
