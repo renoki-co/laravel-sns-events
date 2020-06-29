@@ -4,7 +4,7 @@ namespace Rennokki\LaravelSnsEvents\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 
 class SnsController extends Controller
@@ -110,6 +110,6 @@ class SnsController extends Controller
      */
     protected function getNotificationEventClass(): string
     {
-        return SnsEvent::class;
+        return SnsNotification::class;
     }
 }

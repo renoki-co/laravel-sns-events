@@ -21,7 +21,7 @@ $ composer require rennokki/laravel-sns-events
 
 There are two classes that get triggered, depending on the request sent by AWS:
 
-* `Rennokki\LaravelSnsEvents\Events\SnsEvent` - triggered on each SNS notification
+* `Rennokki\LaravelSnsEvents\Events\SnsNotification` - triggered on each SNS notification
 * `Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation` - triggered when the subscription is confirmed
 
 A controller that will handle the response for you should be registered in your routes:
@@ -53,14 +53,14 @@ If you have registered the route and created a SNS Topic, you should register th
 To process the events, you should add the events in your `app/Providers/EventServiceProvider.php`:
 
 ```php
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 
 ...
 
 protected $listen = [
     ...
-    SnsEvent::class => [
+    SnsNotification::class => [
         // add your listeners here for SNS events
     ],
     SnsSubscriptionConfirmation::class => [
@@ -154,7 +154,7 @@ protected function getSubscriptionConfirmationPayload(array $snsMessage, Request
 }
 ```
 
-This way, you can customize the payloads for both Subscription Confirmation `SnsSubscriptionConfirmation` and the usual Notification `SnsEvent`.
+This way, you can customize the payloads for both Subscription Confirmation `SnsSubscriptionConfirmation` and the usual Notification `SnsNotification`.
 
 **Remember that after extending the controller, to point the SNS route defined earlier to the new controller.**
 
@@ -193,9 +193,9 @@ To avoid any issues, remember to extend the respective, original event classes b
 ```php
 // CustomSnsEvent.php
 
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 
-class CustomSnsEvent extends SnsEvent
+class CustomSnsEvent extends SnsNotification
 {
     //
 }

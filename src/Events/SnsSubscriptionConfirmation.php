@@ -2,7 +2,7 @@
 
 namespace Rennokki\LaravelSnsEvents\Events;
 
-class SnsSubscriptionConfirmation extends SnsEvent
+class SnsSubscriptionConfirmation extends SnsNotification
 {
     //
 }

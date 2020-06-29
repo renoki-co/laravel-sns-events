@@ -3,7 +3,7 @@
 namespace Rennokki\LaravelSnsEvents\Tests;
 
 use Illuminate\Support\Facades\Event;
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 use Rennokki\LaravelSnsEvents\Tests\Events\CustomSnsEvent;
 use Rennokki\LaravelSnsEvents\Tests\Events\CustomSubscriptionConfirmation;
@@ -18,7 +18,7 @@ class EventTest extends TestCase
             ->json('GET', route('sns'))
             ->assertSee('OK');
 
-        Event::assertNotDispatched(SnsEvent::class);
+        Event::assertNotDispatched(SnsNotification::class);
         Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
     }
 
@@ -33,7 +33,7 @@ class EventTest extends TestCase
             ->json('POST', route('sns'), $this->getSubscriptionConfirmationPayload())
             ->assertSee('OK');
 
-        Event::assertNotDispatched(SnsEvent::class);
+        Event::assertNotDispatched(SnsNotification::class);
 
         Event::assertDispatched(SnsSubscriptionConfirmation::class, function ($event) {
             $this->assertTrue(
@@ -62,7 +62,7 @@ class EventTest extends TestCase
 
         Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
 
-        Event::assertDispatched(SnsEvent::class, function ($event) {
+        Event::assertDispatched(SnsNotification::class, function ($event) {
             $this->assertTrue(
                 isset($event->payload['headers']['x-test-header'])
             );
