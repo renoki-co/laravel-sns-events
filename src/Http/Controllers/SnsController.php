@@ -20,20 +20,22 @@ class SnsController extends Controller
         $snsMessage = $this->getSnsMessage($request);
 
         if (isset($snsMessage['Type'])) {
-            $eventPayload = $this->getEventPayload($snsMessage, $request);
-
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
                 file_get_contents($snsMessage['SubscribeURL']);
 
                 $class = $this->getSubscriptionConfirmationEventClass();
 
-                event(new $class($eventPayload));
+                event(new $class(
+                    $this->getSubscriptionConfirmationPayload($snsMessage, $request)
+                ));
             }
 
             if ($snsMessage['Type'] === 'Notification') {
                 $class = $this->getNotificationEventClass();
 
-                event(new $class($eventPayload));
+                event(new $class(
+                    $this->getNotificationPayload($snsMessage, $request)
+                ));
             }
         }
 
@@ -63,18 +65,32 @@ class SnsController extends Controller
     }
 
     /**
-     * Get the event payload to stream to the event.
+     * Get the event payload to stream to the event in case
+     * AWS sent a notification payload.
      *
      * @param  array  $snsMessage
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    protected function getEventPayload(array $snsMessage, Request $request): array
+    protected function getNotificationPayload(array $snsMessage, Request $request): array
     {
         return [
             'message' => $snsMessage,
             'headers' => $request->headers->all(),
         ];
+    }
+
+    /**
+     * Get the event payload to stream to the event in case
+     * AWS sent a subscription confirmation payload.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getSubscriptionConfirmationPayload(array $snsMessage, Request $request): array
+    {
+        return $this->getNotificationPayload($snsMessage, $request);
     }
 
     /**

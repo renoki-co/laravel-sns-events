@@ -96,7 +96,15 @@ By default, the payload looks like this:
 ```php
 use Illuminate\Http\Request;
 
-protected function getEventPayload(array $snsMessage, Request $request): array
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a notification payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getNotificationPayload(array $snsMessage, Request $request): array
 {
     // $snsMessage is the SNS message from the request body (as array)
     // You may also access the request.
@@ -108,19 +116,45 @@ protected function getEventPayload(array $snsMessage, Request $request): array
 }
 ```
 
-While extending the controller, you can replace the `getEventPayload` method with your own:
+While extending the controller, you can replace the `getNotificationPayload` and `getSubscriptionConfirmationPayload` methods with your own:
 
 ```php
 use Illuminate\Http\Request;
 
-protected function getEventPayload(array $snsMessage, Request $request): array
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a notification payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getNotificationPayload(array $snsMessage, Request $request): array
 {
     return [
         'message' => $snsMessage,
         'user' => $request->user(),
     ];
 }
+
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a subscription confirmation payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getSubscriptionConfirmationPayload(array $snsMessage, Request $request): array
+{
+    return [
+        'message' => $snsMessage,
+        'headers' => $request->headers->all(),
+    ];
+}
 ```
+
+This way, you can customize the payloads for both Subscription Confirmation `SnsSubscriptionConfirmation` and the usual Notification `SnsEvent`.
 
 **Remember that after extending the controller, to point the SNS route defined earlier to the new controller.**
 

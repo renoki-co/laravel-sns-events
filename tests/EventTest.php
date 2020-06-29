@@ -93,7 +93,7 @@ class EventTest extends TestCase
 
         Event::assertDispatched(CustomSubscriptionConfirmation::class, function ($event) {
             $this->assertEquals(
-                'some-string', $event->payload['test']
+                'some-string', $event->payload['confirmation_test']
             );
 
             $this->assertFalse(
