@@ -21,7 +21,7 @@ $ composer require rennokki/laravel-sns-events
 
 There are two classes that get triggered, depending on the request sent by AWS:
 
-* `Rennokki\LaravelSnsEvents\Events\SnsEvent` - triggered on each SNS notification
+* `Rennokki\LaravelSnsEvents\Events\SnsNotification` - triggered on each SNS notification
 * `Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation` - triggered when the subscription is confirmed
 
 A controller that will handle the response for you should be registered in your routes:
@@ -53,14 +53,14 @@ If you have registered the route and created a SNS Topic, you should register th
 To process the events, you should add the events in your `app/Providers/EventServiceProvider.php`:
 
 ```php
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
 
 ...
 
 protected $listen = [
     ...
-    SnsEvent::class => [
+    SnsNotification::class => [
         // add your listeners here for SNS events
     ],
     SnsSubscriptionConfirmation::class => [
@@ -96,7 +96,15 @@ By default, the payload looks like this:
 ```php
 use Illuminate\Http\Request;
 
-protected function getEventPayload(array $snsMessage, Request $request): array
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a notification payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getNotificationPayload(array $snsMessage, Request $request): array
 {
     // $snsMessage is the SNS message from the request body (as array)
     // You may also access the request.
@@ -108,19 +116,45 @@ protected function getEventPayload(array $snsMessage, Request $request): array
 }
 ```
 
-While extending the controller, you can replace the `getEventPayload` method with your own:
+While extending the controller, you can replace the `getNotificationPayload` and `getSubscriptionConfirmationPayload` methods with your own:
 
 ```php
 use Illuminate\Http\Request;
 
-protected function getEventPayload(array $snsMessage, Request $request): array
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a notification payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getNotificationPayload(array $snsMessage, Request $request): array
 {
     return [
         'message' => $snsMessage,
         'user' => $request->user(),
     ];
 }
+
+/**
+ * Get the event payload to stream to the event in case
+ * AWS sent a subscription confirmation payload.
+ *
+ * @param  array  $snsMessage
+ * @param  \Illuminate\Http\Request  $request
+ * @return array
+ */
+protected function getSubscriptionConfirmationPayload(array $snsMessage, Request $request): array
+{
+    return [
+        'message' => $snsMessage,
+        'headers' => $request->headers->all(),
+    ];
+}
 ```
+
+This way, you can customize the payloads for both Subscription Confirmation `SnsSubscriptionConfirmation` and the usual Notification `SnsNotification`.
 
 **Remember that after extending the controller, to point the SNS route defined earlier to the new controller.**
 
@@ -159,9 +193,9 @@ To avoid any issues, remember to extend the respective, original event classes b
 ```php
 // CustomSnsEvent.php
 
-use Rennokki\LaravelSnsEvents\Events\SnsEvent;
+use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 
-class CustomSnsEvent extends SnsEvent
+class CustomSnsEvent extends SnsNotification
 {
     //
 }

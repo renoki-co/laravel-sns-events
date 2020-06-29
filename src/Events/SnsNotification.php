@@ -2,7 +2,7 @@
 
 namespace Rennokki\LaravelSnsEvents\Events;
 
-class SnsEvent
+class SnsNotification
 {
     /**
      * The payload to be delivered in the listeners.

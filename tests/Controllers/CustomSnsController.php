@@ -10,17 +10,34 @@ use Rennokki\LaravelSnsEvents\Tests\Events\CustomSubscriptionConfirmation;
 class CustomSnsController extends SnsController
 {
     /**
-     * Get the event payload to stream to the event.
+     * Get the event payload to stream to the event in case
+     * AWS sent a notification payload.
      *
      * @param  array  $snsMessage
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    protected function getEventPayload(array $snsMessage, Request $request): array
+    protected function getNotificationPayload(array $snsMessage, Request $request): array
     {
         return [
             'message' => $snsMessage,
             'test' => $request->query('test'),
+        ];
+    }
+
+    /**
+     * Get the event payload to stream to the event in case
+     * AWS sent a subscription confirmation payload.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getSubscriptionConfirmationPayload(array $snsMessage, Request $request): array
+    {
+        return [
+            'message' => $snsMessage,
+            'confirmation_test' => $request->query('test'),
         ];
     }
 
