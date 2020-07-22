@@ -38,6 +38,8 @@ class CustomSnsController extends SnsController
         return [
             'message' => $snsMessage,
             'confirmation_test' => $request->query('test'),
+            'on_subscription_confirmation' => $request->onSubscriptionConfirmation,
+            'on_notification' => $request->onNotification,
         ];
     }
 
@@ -59,5 +61,29 @@ class CustomSnsController extends SnsController
     protected function getNotificationEventClass(): string
     {
         return CustomSnsEvent::class;
+    }
+
+    /**
+     * Handle logic at the controller level on notification.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function onNotification(array $snsMessage, Request $request): void
+    {
+        mt_rand(0, 10000);
+    }
+
+    /**
+     * Handle logic at the controller level on subscription.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function onSubscriptionConfirmation(array $snsMessage, Request $request): void
+    {
+        mt_rand(0, 10000);
     }
 }

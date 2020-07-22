@@ -31,6 +31,8 @@ class SnsController extends Controller
                 event(new $class(
                     $this->getSubscriptionConfirmationPayload($snsMessage, $request)
                 ));
+
+                call_user_func([$this, 'onSubscriptionConfirmation'], $snsMessage, $request);
             }
 
             if ($snsMessage['Type'] === 'Notification') {
@@ -39,6 +41,8 @@ class SnsController extends Controller
                 event(new $class(
                     $this->getNotificationPayload($snsMessage, $request)
                 ));
+
+                call_user_func([$this, 'onNotification'], $snsMessage, $request);
             }
         }
 
@@ -92,5 +96,29 @@ class SnsController extends Controller
     protected function getNotificationEventClass(): string
     {
         return SnsNotification::class;
+    }
+
+    /**
+     * Handle logic at the controller level on notification.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function onNotification(array $snsMessage, Request $request): void
+    {
+        //
+    }
+
+    /**
+     * Handle logic at the controller level on subscription.
+     *
+     * @param  array  $snsMessage
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function onSubscriptionConfirmation(array $snsMessage, Request $request): void
+    {
+        //
     }
 }
