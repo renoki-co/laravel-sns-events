@@ -39,7 +39,7 @@ A controller that will handle the response for you should be registered in your 
 Route::any('/aws/sns', '\Rennokki\LaravelSnsEvents\Http\Controllers\SnsController@handle');
 ```
 
-SNS sends data as raw json, so you will need to whitelist your route in your `VerifyCsrfToken.php`:
+Make sure you whitelist your route in `VerifyCsrfToken.php`:
 
 ```php
 protected $except = [
@@ -49,8 +49,6 @@ protected $except = [
 ```
 
 You will need an AWS account and register a SNS Topic and set up a subscription for HTTP(s) protocol that will point out to the route you just registered.
-
-Make sure to enable RAW JSON format for your SNS Subscription.
 
 If you have registered the route and created a SNS Topic, you should register the URL and click the confirmation button from the AWS Dashboard. In a short while, if you implemented the route well, you'll be seeing that your endpoint is registered.
 
