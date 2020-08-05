@@ -14,8 +14,22 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $this
-            ->json('GET', route('sns'))
+        $this->json('GET', route('sns'))
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(SnsNotification::class);
+        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
+
+        $this->json('GET', route('sns', ['certificate' => static::$certificate]))
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(SnsNotification::class);
+        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
+
+        $payload = $this->getSubscriptionConfirmationPayload();
+
+        $this->withHeaders($this->getHeadersForMessage($payload))
+            ->json('GET', route('sns', ['certificate' => static::$certificate]))
             ->assertSee('OK');
 
         Event::assertNotDispatched(SnsNotification::class);
@@ -26,12 +40,13 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $this
-            ->withHeaders([
-                'x-test-header' => 1,
-            ])
-            ->json('POST', route('sns'), $this->getSubscriptionConfirmationPayload())
-            ->assertSee('OK');
+        $payload = $this->getSubscriptionConfirmationPayload();
+
+        $this->withHeaders(array_merge($this->getHeadersForMessage($payload), [
+            'x-test-header' => 1,
+        ]))
+        ->json('POST', route('sns', ['certificate' => static::$certificate]), $payload)
+        ->assertSee('OK');
 
         Event::assertNotDispatched(SnsNotification::class);
 
@@ -48,17 +63,16 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $payload = json_encode([
+        $payload = $this->getNotificationPayload([
             'test' => 1,
             'sns' => true,
         ]);
 
-        $this
-            ->withHeaders([
-                'x-test-header' => 1,
-            ])
-            ->json('POST', route('sns'), $this->getNotificationPayload($payload))
-            ->assertSee('OK');
+        $this->withHeaders(array_merge($this->getHeadersForMessage($payload), [
+            'x-test-header' => 1,
+        ]))
+        ->json('POST', route('sns', ['certificate' => static::$certificate]), $payload)
+        ->assertSee('OK');
 
         Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
 
@@ -82,12 +96,13 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $this
-            ->withHeaders([
-                'x-test-header' => 1,
-            ])
-            ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getSubscriptionConfirmationPayload())
-            ->assertSee('OK');
+        $payload = $this->getSubscriptionConfirmationPayload();
+
+        $this->withHeaders(array_merge($this->getHeadersForMessage($payload), [
+            'x-test-header' => 1,
+        ]))
+        ->json('POST', route('custom-sns', ['test' => 'some-string', 'certificate' => static::$certificate]), $payload)
+        ->assertSee('OK');
 
         Event::assertNotDispatched(CustomSnsEvent::class);
 
@@ -108,17 +123,16 @@ class EventTest extends TestCase
     {
         Event::fake();
 
-        $payload = json_encode([
+        $payload = $this->getNotificationPayload([
             'test' => 1,
             'sns' => true,
         ]);
 
-        $this
-            ->withHeaders([
-                'x-test-header' => 1,
-            ])
-            ->json('POST', route('custom-sns', ['test' => 'some-string']), $this->getNotificationPayload($payload))
-            ->assertSee('OK');
+        $this->withHeaders(array_merge($this->getHeadersForMessage($payload), [
+            'x-test-header' => 1,
+        ]))
+        ->json('POST', route('custom-sns', ['test' => 'some-string', 'certificate' => static::$certificate]), $payload)
+        ->assertSee('OK');
 
         Event::assertNotDispatched(CustomSubscriptionConfirmation::class);
 

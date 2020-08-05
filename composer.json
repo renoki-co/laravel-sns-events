@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "illuminate/support": "^6.0|^7.0"
+        "illuminate/support": "^6.0|^7.0",
+        "aws/aws-php-sns-message-validator": "^1.6"
     },
     "autoload": {
         "psr-4": {

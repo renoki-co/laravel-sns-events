@@ -2,29 +2,55 @@
 
 namespace Rennokki\LaravelSnsEvents\Concerns;
 
+use Aws\Sns\Message;
+use Aws\Sns\MessageValidator;
+use Exception;
 use Illuminate\Http\Request;
 
 trait HandlesSns
 {
     /**
-     * Get the payload content from the request.
+     * Get the SNS message as array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return null|string
+     * @return \Aws\Sns\Message
      */
-    public function getRequestContent(Request $request)
+    public function getSnsMessage(Request $request)
     {
-        return $request->getContent() ?: file_get_contents('php://input');
+        try {
+            return Message::fromJsonString(
+                $request->getContent() ?: file_get_contents('php://input')
+            );
+        } catch (Exception $e) {
+            return new Message([]);
+        }
     }
 
     /**
-     * Get the JSON-decoded content.
+     * Check if the SNS message is valid.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @return bool
      */
-    public function getSnsMessage(Request $request): array
+    public function snsMessageIsValid(Request $request): bool
     {
-        return json_decode($this->getRequestContent($request), true);
+        try {
+            return $this->getMessageValidator($request)->isValid(
+                $this->getSnsMessage($request)
+            );
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get the message validator instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Aws\Sns\MessageValidator
+     */
+    protected function getMessageValidator(Request $request)
+    {
+        return new MessageValidator;
     }
 }
