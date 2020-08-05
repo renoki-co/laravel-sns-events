@@ -2,6 +2,7 @@
 
 namespace Rennokki\LaravelSnsEvents\Tests\Controllers;
 
+use Aws\Sns\MessageValidator;
 use Illuminate\Http\Request;
 use Rennokki\LaravelSnsEvents\Http\Controllers\SnsController;
 use Rennokki\LaravelSnsEvents\Tests\Events\CustomSnsEvent;
@@ -85,5 +86,18 @@ class CustomSnsController extends SnsController
     protected function onSubscriptionConfirmation(array $snsMessage, Request $request): void
     {
         mt_rand(0, 10000);
+    }
+
+    /**
+     * Get the message validator instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Aws\Sns\MessageValidator
+     */
+    protected function getMessageValidator(Request $request)
+    {
+        return new MessageValidator(function ($url) use ($request) {
+            return $request->certificate ?: $url;
+        });
     }
 }

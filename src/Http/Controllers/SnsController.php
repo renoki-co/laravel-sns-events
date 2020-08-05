@@ -20,7 +20,11 @@ class SnsController extends Controller
      */
     public function handle(Request $request)
     {
-        $snsMessage = $this->getSnsMessage($request);
+        if (! $this->snsMessageIsValid($request)) {
+            return $this->okStatus();
+        }
+
+        $snsMessage = $this->getSnsMessage($request)->toArray();
 
         if (isset($snsMessage['Type'])) {
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
@@ -46,7 +50,7 @@ class SnsController extends Controller
             }
         }
 
-        return response('OK', 200);
+        return $this->okStatus();
     }
 
     /**
@@ -120,5 +124,15 @@ class SnsController extends Controller
     protected function onSubscriptionConfirmation(array $snsMessage, Request $request): void
     {
         //
+    }
+
+    /**
+     * Get a 200 OK status.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function okStatus()
+    {
+        return response('OK', 200);
     }
 }
