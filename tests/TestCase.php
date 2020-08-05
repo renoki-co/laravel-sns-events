@@ -120,11 +120,11 @@ class TestCase extends Orchestra
     /**
      * Get an example notification payload for testing.
      *
-     * @param  string  $payload
+     * @param  array  $payload
      * @param  array  $custom
      * @return array
      */
-    protected function getNotificationPayload($payload = '', array $custom = []): array
+    protected function getNotificationPayload(array $payload = [], array $custom = []): array
     {
         $validator = new MessageValidator;
 
