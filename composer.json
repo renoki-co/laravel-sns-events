@@ -2,7 +2,7 @@
     "name": "rennokki/laravel-sns-events",
     "description": "A description for laravel-sns-events.",
     "type": "package",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "keywords": [
         "laravel"
     ],
