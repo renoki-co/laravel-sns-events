@@ -51,6 +51,6 @@ trait HandlesSns
      */
     protected function getMessageValidator(Request $request)
     {
-        return new MessageValidator;
+        return resolve(MessageValidator::class);
     }
 }
