@@ -53,7 +53,8 @@ trait GeneratesSnsMessages
      */
     protected static function tearDownSsl(): void
     {
-        openssl_pkey_free(self::$privateKey);
+        // Deprecated in PHP >= 8.0
+        // openssl_pkey_free(self::$privateKey);
     }
 
     /**
