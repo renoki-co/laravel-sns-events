@@ -15,10 +15,9 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "illuminate/http": "^6.0|^7.0|^8.0",
-        "illuminate/routing": "^6.0|^7.0|^8.0",
-        "illuminate/support": "^6.0|^7.0|^8.0",
+        "illuminate/http": "^7.0|^8.0",
+        "illuminate/routing": "^7.0|^8.0",
+        "illuminate/support": "^7.0|^8.0",
         "aws/aws-php-sns-message-validator": "^1.6"
     },
     "autoload": {
@@ -42,7 +41,8 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "^4.0|^5.0|^6.0"
+        "mockery/mockery": "^1.4",
+        "orchestra/testbench": "^5.0|^6.0"
     },
     "config": {
         "sort-packages": true
