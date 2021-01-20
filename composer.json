@@ -15,9 +15,9 @@
         }
     ],
     "require": {
-        "illuminate/http": "^7.0|^8.0",
-        "illuminate/routing": "^7.0|^8.0",
-        "illuminate/support": "^7.0|^8.0",
+        "illuminate/http": "^7.30|^8.23",
+        "illuminate/routing": "^7.30|^8.23",
+        "illuminate/support": "^7.30|^8.23",
         "aws/aws-php-sns-message-validator": "^1.6"
     },
     "autoload": {
