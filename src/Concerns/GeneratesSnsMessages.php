@@ -43,7 +43,8 @@ trait GeneratesSnsMessages
 
         openssl_x509_export($x509, self::$certificate);
 
-        openssl_x509_free($x509);
+        // Deprecated in PHP >= 8.0
+        // openssl_x509_free($x509);
     }
 
     /**
