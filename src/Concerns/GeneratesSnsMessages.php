@@ -1,6 +1,6 @@
 <?php
 
-namespace Rennokki\LaravelSnsEvents\Tests\Concerns;
+namespace Rennokki\LaravelSnsEvents\Concerns;
 
 use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
