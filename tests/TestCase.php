@@ -3,10 +3,11 @@
 namespace Rennokki\LaravelSnsEvents\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
+use Rennokki\LaravelSnsEvents\Concerns\GeneratesSnsMessages;
 
 class TestCase extends Orchestra
 {
-    use Concerns\GeneratesSnsMessages;
+    use GeneratesSnsMessages;
 
     /**
      * {@inheritdoc}
