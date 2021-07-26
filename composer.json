@@ -1,6 +1,6 @@
 {
     "name": "rennokki/laravel-sns-events",
-    "description": "A description for laravel-sns-events.",
+    "description": "Laravel SNS Events eases the processing of incoming SNS webhooks using Laravel Events.",
     "type": "package",
     "license": "Apache-2.0",
     "keywords": [
