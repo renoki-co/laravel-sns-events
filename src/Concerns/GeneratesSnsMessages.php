@@ -42,20 +42,6 @@ trait GeneratesSnsMessages
         $x509 = openssl_csr_sign($csr, null, self::$privateKey, 1);
 
         openssl_x509_export($x509, self::$certificate);
-
-        // Deprecated in PHP >= 8.0
-        // openssl_x509_free($x509);
-    }
-
-    /**
-     * Deinitialize the SSL keys.
-     *
-     * @return void
-     */
-    protected static function tearDownSsl(): void
-    {
-        // Deprecated in PHP >= 8.0
-        // openssl_pkey_free(self::$privateKey);
     }
 
     /**

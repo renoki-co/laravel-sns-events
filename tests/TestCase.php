@@ -18,14 +18,6 @@ class TestCase extends Orchestra
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        static::tearDownSsl();
-    }
-
-    /**
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
