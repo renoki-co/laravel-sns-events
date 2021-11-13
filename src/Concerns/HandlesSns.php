@@ -6,6 +6,7 @@ use Aws\Sns\Message;
 use Aws\Sns\MessageValidator;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 trait HandlesSns
 {
@@ -51,6 +52,8 @@ trait HandlesSns
      */
     protected function getMessageValidator(Request $request)
     {
-        return new MessageValidator;
+        return App::environment(['testing', 'local'])
+            ? new MessageValidator(fn ($url) => $request->certificate ?: $url)
+            : new MessageValidator;
     }
 }
