@@ -19,7 +19,7 @@ Laravel SNS Events eases the processing of incoming SNS webhooks using Laravel E
 
 ## 📃 Documentation
 
-[The entire documentation is available on Gitbook 🌍](https://rennokki.gitbook.io/laravel-aws-sns/)
+[The entire documentation is available on Gitbook 🌍](https://laravel-sns-events.renoki.org/)
 
 ## 🐛 Testing
 
