@@ -52,8 +52,20 @@ trait HandlesSns
      */
     protected function getMessageValidator(Request $request)
     {
-        return App::environment(['testing', 'local'])
-            ? new MessageValidator(fn ($url) => $request->certificate ?: $url)
-            : new MessageValidator;
+        if (App::environment(['testing', 'local'])) {
+            return new MessageValidator(function ($url) use ($request) {
+                if ($certificate = $request->sns_certificate) {
+                    return $certificate;
+                }
+
+                if ($certificate = $request->header('X-Sns-Testing-Certificate')) {
+                    return $certificate;
+                }
+
+                return $url;
+            });
+        }
+
+        return new MessageValidator;
     }
 }

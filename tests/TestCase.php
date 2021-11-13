@@ -10,14 +10,6 @@ class TestCase extends Orchestra
     use GeneratesSnsMessages;
 
     /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass(): void
-    {
-        static::initializeSsl();
-    }
-
-    /**
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
