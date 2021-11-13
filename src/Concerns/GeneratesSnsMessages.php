@@ -8,21 +8,21 @@ use Aws\Sns\MessageValidator;
 trait GeneratesSnsMessages
 {
     /**
-     * Get the private key to sign the request.
+     * Get the private key to sign the request for SNS.
      *
      * @var string
      */
-    protected static $privateKey;
+    protected static $snsPrivateKey;
 
     /**
-     * The certificate to sign the request.
+     * The certificate to sign the request for SNS.
      *
      * @var string
      */
-    protected static $certificate;
+    protected static $snsCertificate;
 
     /**
-     * An valid certificate URL for test.
+     * An valid certificate URL to test SNS.
      *
      * @var string
      */
@@ -35,13 +35,13 @@ trait GeneratesSnsMessages
      */
     protected static function initializeSsl(): void
     {
-        self::$privateKey = openssl_pkey_new();
+        self::$snsPrivateKey = openssl_pkey_new();
 
-        $csr = openssl_csr_new([], self::$privateKey);
+        $csr = openssl_csr_new([], self::$snsPrivateKey);
 
-        $x509 = openssl_csr_sign($csr, null, self::$privateKey, 1);
+        $x509 = openssl_csr_sign($csr, null, self::$snsPrivateKey, 1);
 
-        openssl_x509_export($x509, self::$certificate);
+        openssl_x509_export($x509, self::$snsCertificate);
     }
 
     /**
@@ -52,7 +52,7 @@ trait GeneratesSnsMessages
      */
     protected function getSignature($stringToSign)
     {
-        openssl_sign($stringToSign, $signature, self::$privateKey);
+        openssl_sign($stringToSign, $signature, self::$snsPrivateKey);
 
         return base64_encode($signature);
     }
