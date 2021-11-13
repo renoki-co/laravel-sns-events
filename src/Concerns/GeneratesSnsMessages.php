@@ -8,25 +8,25 @@ use Aws\Sns\MessageValidator;
 trait GeneratesSnsMessages
 {
     /**
-     * Get the private key to sign the request.
+     * Get the private key to sign the request for SNS.
      *
      * @var string
      */
-    protected static $privateKey;
+    protected static $snsPrivateKey;
 
     /**
-     * The certificate to sign the request.
+     * The certificate to sign the request for SNS.
      *
      * @var string
      */
-    protected static $certificate;
+    protected static $snsCertificate;
 
     /**
-     * An valid certificate URL for test.
+     * An valid certificate URL to test SNS.
      *
      * @var string
      */
-    public static $validCertUrl = 'https://sns.us-west-2.amazonaws.com/bar.pem';
+    public static $snsValidCertUrl = 'https://sns.us-west-2.amazonaws.com/bar.pem';
 
     /**
      * Initialize the SSL keys and private keys.
@@ -35,27 +35,13 @@ trait GeneratesSnsMessages
      */
     protected static function initializeSsl(): void
     {
-        self::$privateKey = openssl_pkey_new();
+        static::$snsPrivateKey = openssl_pkey_new();
 
-        $csr = openssl_csr_new([], self::$privateKey);
+        $csr = openssl_csr_new([], static::$snsPrivateKey);
 
-        $x509 = openssl_csr_sign($csr, null, self::$privateKey, 1);
+        $x509 = openssl_csr_sign($csr, null, static::$snsPrivateKey, 1);
 
-        openssl_x509_export($x509, self::$certificate);
-
-        // Deprecated in PHP >= 8.0
-        // openssl_x509_free($x509);
-    }
-
-    /**
-     * Deinitialize the SSL keys.
-     *
-     * @return void
-     */
-    protected static function tearDownSsl(): void
-    {
-        // Deprecated in PHP >= 8.0
-        // openssl_pkey_free(self::$privateKey);
+        openssl_x509_export($x509, static::$snsCertificate);
     }
 
     /**
@@ -66,7 +52,9 @@ trait GeneratesSnsMessages
      */
     protected function getSignature($stringToSign)
     {
-        openssl_sign($stringToSign, $signature, self::$privateKey);
+        static::initializeSsl();
+
+        openssl_sign($stringToSign, $signature, static::$snsPrivateKey);
 
         return base64_encode($signature);
     }
@@ -91,7 +79,7 @@ trait GeneratesSnsMessages
             'Timestamp' => now()->toDateTimeString(),
             'SignatureVersion' => '1',
             'Signature' => true,
-            'SigningCertURL' => static::$validCertUrl,
+            'SigningCertURL' => static::$snsValidCertUrl,
         ], $custom);
 
         $message['Signature'] = $this->getSignature(
@@ -124,7 +112,7 @@ trait GeneratesSnsMessages
             'SignatureVersion' => '1',
             'Token' => '2336412f37...',
             'Signature' => true,
-            'SigningCertURL' => static::$validCertUrl,
+            'SigningCertURL' => static::$snsValidCertUrl,
             'UnsubscribeURL' => 'https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:123456789012:MyTopic:c9135db0-26c4-47ec-8998-413945fb5a96',
         ], $custom);
 
@@ -136,6 +124,21 @@ trait GeneratesSnsMessages
     }
 
     /**
+     * Send the SNS-signed message to the given URL.
+     *
+     * @param  string  $url
+     * @param  array  $snsPayload
+     * @return \Illuminate\Testing\TestResponse
+     */
+    protected function sendSnsMessage($url, array $snsPayload = [])
+    {
+        /** @var \Illuminate\Foundation\Testing\Concerns\MakesHttpRequests&\Rennokki\LaravelSnsEvents\Concerns\GeneratesSnsMessages $this */
+        return $this->withHeaders($this->getHeadersForMessage($snsPayload))
+            ->withHeaders(['X-Sns-Testing-Certificate' => static::$snsCertificate])
+            ->json('POST', $url, $snsPayload);
+    }
+
+    /**
      * Get the right headers for a SNS message.
      *
      * @param  array  $message
@@ -144,10 +147,10 @@ trait GeneratesSnsMessages
     protected function getHeadersForMessage(array $message): array
     {
         return [
-            'X-AMZ-SNS-MESSAGE-TYPE' => $message['Type'],
-            'X-AMZ-SNS-MESSAGE-ID' => $message['MessageId'],
-            'X-AMZ-SNS-TOPIC-ARN' => $message['TopicArn'],
-            'X-AMZ-SNS-SUBSCRIPTION-ARN' => "{$message['TopicArn']}:c9135db0-26c4-47ec-8998-413945fb5a96",
+            'X-AMZ-SNS-MESSAGE-TYPE' => $message['Type'] ?? null,
+            'X-AMZ-SNS-MESSAGE-ID' => $message['MessageId'] ?? null,
+            'X-AMZ-SNS-TOPIC-ARN' => $message['TopicArn'] ?? null,
+            'X-AMZ-SNS-SUBSCRIPTION-ARN' => ($message['TopicArn'] ?? null).':c9135db0-26c4-47ec-8998-413945fb5a96',
         ];
     }
 }
