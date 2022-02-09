@@ -28,7 +28,7 @@ class SnsController extends Controller
 
         if (isset($snsMessage['Type'])) {
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
-                file_get_contents($snsMessage['SubscribeURL']);
+                @file_get_contents($snsMessage['SubscribeURL']);
 
                 $class = $this->getSubscriptionConfirmationEventClass();
 
