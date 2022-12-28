@@ -62,7 +62,7 @@ trait HandlesSns
                     return $certificate;
                 }
 
-                return $url;
+                return @file_get_contents($url);
             });
         }
 
