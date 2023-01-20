@@ -28,7 +28,9 @@ class SnsController extends Controller
 
         if (isset($snsMessage['Type'])) {
             if ($snsMessage['Type'] === 'SubscriptionConfirmation') {
-                @file_get_contents($snsMessage['SubscribeURL']);
+                if (! $this->callSubscribeUrl($snsMessage['SubscribeURL'])) {
+                    return $this->okStatus();
+                }
 
                 $class = $this->getSubscriptionConfirmationEventClass();
 
@@ -134,5 +136,16 @@ class SnsController extends Controller
     protected function okStatus()
     {
         return response('OK', 200);
+    }
+
+    /**
+     * Make a call to the subscribe URL to confirm the subscription.
+     *
+     * @param  string  $url
+     * @return bool
+     */
+    protected function callSubscribeUrl(string $url): bool
+    {
+        return @file_get_contents($url) !== false;
     }
 }

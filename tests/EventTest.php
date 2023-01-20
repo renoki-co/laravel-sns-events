@@ -5,6 +5,8 @@ namespace Rennokki\LaravelSnsEvents\Tests;
 use Illuminate\Support\Facades\Event;
 use Rennokki\LaravelSnsEvents\Events\SnsNotification;
 use Rennokki\LaravelSnsEvents\Events\SnsSubscriptionConfirmation;
+use Rennokki\LaravelSnsEvents\Tests\Controllers\CustomSnsController;
+use Rennokki\LaravelSnsEvents\Tests\Controllers\SnsController;
 use Rennokki\LaravelSnsEvents\Tests\Events\CustomSnsEvent;
 use Rennokki\LaravelSnsEvents\Tests\Events\CustomSubscriptionConfirmation;
 
@@ -35,6 +37,7 @@ class EventTest extends TestCase
     public function test_subscription_confirmation()
     {
         Event::fake();
+        $this->mockCallSubscribeUrlResult(true);
 
         $payload = $this->getSubscriptionConfirmationPayload();
 
@@ -51,6 +54,21 @@ class EventTest extends TestCase
 
             return true;
         });
+    }
+
+    public function test_subscription_not_confirmated_if_subscription_url_call_fails()
+    {
+        Event::fake();
+        $this->mockCallSubscribeUrlResult(false);
+
+        $payload = $this->getSubscriptionConfirmationPayload();
+
+        $this->withHeaders(['x-test-header' => 1])
+            ->sendSnsMessage(route('sns'), $payload)
+            ->assertSee('OK');
+
+        Event::assertNotDispatched(SnsNotification::class);
+        Event::assertNotDispatched(SnsSubscriptionConfirmation::class);
     }
 
     public function test_notification_confirmation()
@@ -87,6 +105,7 @@ class EventTest extends TestCase
     public function test_custom_controller_confirmation()
     {
         Event::fake();
+        $this->mockCustomCallSubscribeUrlResult(true);
 
         $payload = $this->getSubscriptionConfirmationPayload();
 
@@ -142,5 +161,25 @@ class EventTest extends TestCase
 
             return true;
         });
+    }
+
+    private function mockCallSubscribeUrlResult(bool $result)
+    {
+        $this->partialMock(SnsController::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('callSubscribeUrl')
+            ->with('https://example.com')
+            ->once()
+            ->andReturn($result);
+    }
+
+    private function mockCustomCallSubscribeUrlResult(bool $result)
+    {
+        $this->partialMock(CustomSnsController::class)
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('callSubscribeUrl')
+            ->with('https://example.com')
+            ->once()
+            ->andReturn($result);
     }
 }
