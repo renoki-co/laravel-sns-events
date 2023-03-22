@@ -23,6 +23,7 @@ jobs:
         laravel:
           - 8.*
           - 9.*
+          - 10.*
         prefer:
           - 'prefer-lowest'
           - 'prefer-stable'
@@ -31,6 +32,8 @@ jobs:
             testbench: '6.*'
           - laravel: '9.*'
             testbench: '7.*'
+          - laravel: '10.*'
+            testbench: '8.*'
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} --${{ matrix.prefer }}
 
