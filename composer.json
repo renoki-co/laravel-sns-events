@@ -43,7 +43,7 @@
     "require-dev": {
         "mockery/mockery": "^1.5",
         "orchestra/testbench": "^7.0|^8.0",
-        "phpunit/phpunit": "^9.5.26|^10.0"
+        "phpunit/phpunit": "^9.5.26"
     },
     "config": {
         "sort-packages": true
