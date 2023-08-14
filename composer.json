@@ -42,7 +42,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^7.23|^8.1.1",
+        "orchestra/testbench": "^8.7.0",
         "phpunit/phpunit": "^9.5.26"
     },
     "config": {
