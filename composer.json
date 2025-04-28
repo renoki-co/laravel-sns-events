@@ -18,7 +18,7 @@
         "illuminate/http": "^9.35|^10.5",
         "illuminate/routing": "^9.35|^10.5",
         "illuminate/support": "^9.35|^10.5",
-        "aws/aws-php-sns-message-validator": "^1.6"
+        "aws/aws-php-sns-message-validator": "^1.10"
     },
     "autoload": {
         "psr-4": {
